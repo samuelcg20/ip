@@ -50,6 +50,13 @@ public class Sai {
                     this.say(e.getMessage());
                 }
                 input = scanner.nextLine();
+            } else if (input.toLowerCase().startsWith("delete")) {
+                try {
+                    this.delete(input);
+                } catch (InvalidTaskNumberException e) {
+                    this.say(e.getMessage());
+                }
+                input = scanner.nextLine();
             }
             else {
                 try {
@@ -133,7 +140,7 @@ public class Sai {
         }
     }
 
-    public String[] extractPhrases(String input) throws InvalidTaskFormatException{
+    public String[] extractPhrases(String input) throws InvalidTaskFormatException {
         String firstWord = "";
         String task = "";
         String by = "";
@@ -208,6 +215,28 @@ public class Sai {
 
             default -> {
                 throw new InvalidTaskFormatException("Inputted task does not fall under todo, deadline or event");
+            }
+        }
+    }
+
+    public void delete(String input) throws InvalidTaskNumberException {
+        String[] splitInput = input.split(" ");
+
+        if (splitInput.length != 2) {
+            this.say("Please format your message as \"delete [task number]\"");
+        } else {
+            try {
+                int index = Integer.parseInt(splitInput[1]);
+                if (index <= last_pos) {
+                    Task item = this.list.remove(index - 1);
+                    last_pos -= 1;
+                    this.say("Noted. I have removed this task:\n" + item + "\n"
+                            + "Now you have " + (last_pos) + " tasks in the list.");
+                } else {
+                    throw new InvalidTaskNumberException("Task number " + index + " does not exist");
+                }
+            } catch (NumberFormatException e){
+                this.say("Please format your message as \"delete [task number]\"");
             }
         }
     }
