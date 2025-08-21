@@ -52,14 +52,25 @@ public class Sai {
         this.farewell();
     }
 
-    public void addToList(String listItem) {
-        this.list.add(new Task(listItem));
+    public void addToList(String input) {
+        String[] inputList = extractPhrases(input);
+
+        switch (inputList[0]) {
+            case "todo" -> this.list.add(new TodoTask(inputList[1]));
+            case "deadline" -> this.list.add(new DeadlineTask(inputList[1], inputList[2]));
+            case "event" -> this.list.add(new EventTask(inputList[1], inputList[2], inputList[3]));
+            default -> {
+                this.say("Wrong task type");
+                return;
+            }
+        }
+
+        this.say("Got it. I've added this task:\n" + this.list.get(last_pos) + "\n" + "Now you have " + (last_pos + 1) + " tasks in the list.");
         last_pos += 1;
-        this.say("added: " + listItem);
     }
 
     public void displayList() {
-        StringBuilder output = new StringBuilder();
+        StringBuilder output = new StringBuilder("Here are the tasks in your list:\n");
         for (int i = 0; i < last_pos; i++) {
             if (i == last_pos - 1) {
                 output.append(String.format("%d. %s", i + 1, list.get(i)));
@@ -67,25 +78,25 @@ public class Sai {
                 output.append(String.format("%d. %s\n", i + 1, list.get(i)));
             }
         }
-        System.out.println(wrap(output.toString()));
+        this.say(output.toString());
     }
 
     public void mark(String input) {
         String[] splitInput = input.split(" ");
         if (splitInput.length != 2) {
-            System.out.println(wrap("Please format your message as \"mark [task number]\""));
+            this.say("Please format your message as \"mark [task number]\"");
         } else {
             try {
                 int index = Integer.parseInt(splitInput[1]);
                 if (index <= last_pos) {
                     Task item = this.list.get(index - 1);
                     item.mark();
-                    System.out.println(wrap("Nice! I've marked this task as done:\n" + item));
+                    this.say("Nice! I've marked this task as done:\n" + item);
                 } else {
-                    System.out.println(wrap("Task number does not exist"));
+                    this.say("Task number does not exist");
                 }
             } catch (NumberFormatException e){
-                System.out.println(wrap("Please format your message as \"mark [task number]\""));
+                this.say("Please format your message as \"mark [task number]\"");
             }
         }
     }
@@ -93,19 +104,91 @@ public class Sai {
     public void unmark(String input) {
         String[] splitInput = input.split(" ");
         if (splitInput.length != 2) {
-            System.out.println(wrap("Please format your message as \"unmark [task number]\""));
+            this.say("Please format your message as \"unmark [task number]\"");
         } else {
             try {
                 int index = Integer.parseInt(splitInput[1]);
                 if (index <= last_pos) {
                     Task item = this.list.get(index - 1);
                     item.unmark();
-                    System.out.println(wrap("OK, I've marked this task as not done yet: \n" + item));
+                    this.say("OK, I've marked this task as not done yet: \n" + item);
                 } else {
-                    System.out.println(wrap("Task number does not exist"));
+                    this.say("Task number does not exist");
                 }
             } catch (NumberFormatException e){
-                System.out.println(wrap("Please format your message as \"unmark [task number]\""));
+                this.say("Please format your message as \"unmark [task number]\"");
+            }
+        }
+    }
+
+    public String[] extractPhrases(String input) {
+        String firstWord = "";
+        String task = "";
+        String by = "";
+        String from = "";
+        String to = "";
+
+        // First word
+        String[] words = input.toLowerCase().split(" ", 2);
+        if (words.length > 0) {
+            firstWord = words[0];
+        } else {
+            return new String[] {firstWord};
+        }
+
+        switch (firstWord) {
+
+            case "todo" -> {
+                task = words[1].trim();
+                return new String[] {firstWord, task};
+            }
+
+            case "deadline" -> {
+                // After first word up to /by
+                int byIndex = input.indexOf("/by");
+                if (words.length > 1) {
+                    if (byIndex != -1) {
+                        task = input.substring(firstWord.length(), byIndex).trim();
+                    } else {
+                        task = words[1].trim();
+                    }
+                }
+
+                // Extract after /to
+                if (byIndex != -1) {
+                    by = input.substring(byIndex + 4).trim();
+                }
+
+                return new String[] {firstWord, task, by};
+            }
+
+            case "event" -> {
+                // After first word up to /from
+                int fromIndex = input.indexOf("/from");
+                if (words.length > 1) {
+                    if (fromIndex != -1) {
+                        task = input.substring(firstWord.length(), fromIndex).trim();
+                    } else {
+                        task = words[1].trim();
+                    }
+                }
+
+                // Extract between /from and /to
+                int toIndex = input.indexOf("/to");
+                if (fromIndex != -1 && toIndex != -1 && fromIndex < toIndex) {
+                    from = input.substring(fromIndex + 6, toIndex).trim();  // skip "/from "
+                }
+
+                // Extract after /to
+                if (toIndex != -1) {
+                    to = input.substring(toIndex + 4).trim();  // skip "/to "
+                }
+
+                return new String[]{firstWord, task, from, to};
+            }
+
+            default -> {
+                return new String[]{firstWord};
             }
         }
     }
