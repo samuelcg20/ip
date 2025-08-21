@@ -37,14 +37,26 @@ public class Sai {
                 this.displayList();
                 input = scanner.nextLine();
             } else if (input.toLowerCase().startsWith("mark")) {
-                this.mark(input);
+                try {
+                    this.mark(input);
+                } catch (InvalidTaskNumberException e) {
+                    this.say(e.getMessage());
+                }
                 input = scanner.nextLine();
             } else if (input.toLowerCase().startsWith("unmark")) {
-                this.unmark(input);
+                try {
+                    this.unmark(input);
+                } catch (InvalidTaskNumberException e) {
+                    this.say(e.getMessage());
+                }
                 input = scanner.nextLine();
             }
             else {
-                this.addToList(input);
+                try {
+                    this.addToList(input);
+                } catch (InvalidTaskTypeException | InvalidTaskFormatException e) {
+                    this.say(e.getMessage());
+                }
                 input = scanner.nextLine();
             }
         }
@@ -52,7 +64,7 @@ public class Sai {
         this.farewell();
     }
 
-    public void addToList(String input) {
+    public void addToList(String input) throws InvalidTaskTypeException, InvalidTaskFormatException {
         String[] inputList = extractPhrases(input);
 
         switch (inputList[0]) {
@@ -60,12 +72,12 @@ public class Sai {
             case "deadline" -> this.list.add(new DeadlineTask(inputList[1], inputList[2]));
             case "event" -> this.list.add(new EventTask(inputList[1], inputList[2], inputList[3]));
             default -> {
-                this.say("Wrong task type");
-                return;
+                throw new InvalidTaskTypeException("Invalid Task Type");
             }
         }
 
-        this.say("Got it. I've added this task:\n" + this.list.get(last_pos) + "\n" + "Now you have " + (last_pos + 1) + " tasks in the list.");
+        this.say("Got it. I've added this task:\n" + this.list.get(last_pos) + "\n"
+                + "Now you have " + (last_pos + 1) + " tasks in the list.");
         last_pos += 1;
     }
 
@@ -81,7 +93,7 @@ public class Sai {
         this.say(output.toString());
     }
 
-    public void mark(String input) {
+    public void mark(String input) throws InvalidTaskNumberException{
         String[] splitInput = input.split(" ");
         if (splitInput.length != 2) {
             this.say("Please format your message as \"mark [task number]\"");
@@ -93,7 +105,7 @@ public class Sai {
                     item.mark();
                     this.say("Nice! I've marked this task as done:\n" + item);
                 } else {
-                    this.say("Task number does not exist");
+                    throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
             } catch (NumberFormatException e){
                 this.say("Please format your message as \"mark [task number]\"");
@@ -101,7 +113,7 @@ public class Sai {
         }
     }
 
-    public void unmark(String input) {
+    public void unmark(String input) throws InvalidTaskNumberException{
         String[] splitInput = input.split(" ");
         if (splitInput.length != 2) {
             this.say("Please format your message as \"unmark [task number]\"");
@@ -113,7 +125,7 @@ public class Sai {
                     item.unmark();
                     this.say("OK, I've marked this task as not done yet: \n" + item);
                 } else {
-                    this.say("Task number does not exist");
+                    throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
             } catch (NumberFormatException e){
                 this.say("Please format your message as \"unmark [task number]\"");
@@ -121,7 +133,7 @@ public class Sai {
         }
     }
 
-    public String[] extractPhrases(String input) {
+    public String[] extractPhrases(String input) throws InvalidTaskFormatException{
         String firstWord = "";
         String task = "";
         String by = "";
@@ -133,14 +145,19 @@ public class Sai {
         if (words.length > 0) {
             firstWord = words[0];
         } else {
-            return new String[] {firstWord};
+            throw new InvalidTaskFormatException("Unaccepted Input");
         }
 
         switch (firstWord) {
 
             case "todo" -> {
-                task = words[1].trim();
-                return new String[] {firstWord, task};
+                if (words.length > 1) {
+                    task = words[1].trim();
+                    return new String[] {firstWord, task};
+                } else {
+                    throw new InvalidTaskFormatException("Todo Task cannot be empty");
+                }
+
             }
 
             case "deadline" -> {
@@ -150,14 +167,14 @@ public class Sai {
                     if (byIndex != -1) {
                         task = input.substring(firstWord.length(), byIndex).trim();
                     } else {
-                        task = words[1].trim();
+                        throw new InvalidTaskFormatException("Deadline Task needs a /by statement");
                     }
+                } else {
+                    throw new InvalidTaskFormatException("Deadline Task cannot be empty");
                 }
 
                 // Extract after /to
-                if (byIndex != -1) {
-                    by = input.substring(byIndex + 4).trim();
-                }
+                by = input.substring(byIndex + 4).trim();
 
                 return new String[] {firstWord, task, by};
             }
@@ -169,26 +186,28 @@ public class Sai {
                     if (fromIndex != -1) {
                         task = input.substring(firstWord.length(), fromIndex).trim();
                     } else {
-                        task = words[1].trim();
+                        throw new InvalidTaskFormatException("Event Task needs a /from statement");
                     }
+                } else {
+                    throw new InvalidTaskFormatException("Event Task cannot be empty");
                 }
 
                 // Extract between /from and /to
                 int toIndex = input.indexOf("/to");
-                if (fromIndex != -1 && toIndex != -1 && fromIndex < toIndex) {
-                    from = input.substring(fromIndex + 6, toIndex).trim();  // skip "/from "
+                if (toIndex != -1 && fromIndex < toIndex) {
+                    from = input.substring(fromIndex + 6, toIndex).trim();
+                } else {
+                    throw new InvalidTaskFormatException("Event Task needs a /to statement that comes after /from");
                 }
 
                 // Extract after /to
-                if (toIndex != -1) {
-                    to = input.substring(toIndex + 4).trim();  // skip "/to "
-                }
+                to = input.substring(toIndex + 4).trim();
 
                 return new String[]{firstWord, task, from, to};
             }
 
             default -> {
-                return new String[]{firstWord};
+                throw new InvalidTaskFormatException("Inputted task does not fall under todo, deadline or event");
             }
         }
     }
