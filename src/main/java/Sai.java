@@ -100,7 +100,7 @@ public class Sai {
                 if (index <= last_pos) {
                     Task item = this.list.get(index - 1);
                     item.unmark();
-                    System.out.println(wrap("OK, I've marked this task as not done yet:\n" + item));
+                    System.out.println(wrap("OK, I've marked this task as not done yet: \n" + item));
                 } else {
                     System.out.println(wrap("Task number does not exist"));
                 }
