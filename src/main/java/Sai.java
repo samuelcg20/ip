@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -5,8 +6,9 @@ public class Sai {
     private static final String NAME = "S.AI";
     private final String GREETING_MESSAGE = "Hello! I'm %s \nWhat can I do for you?";
     private final String FAREWELL_MESSAGE = "Bye. Hope to see you again soon!";
-    private ArrayList<Task> list = new ArrayList<>();
+    private List<Task> list = new ArrayList<>();
     private int last_pos = 0;
+    private Storage storage = new Storage();
 
     private String wrap(String message) {
         return "-------------------------------------------------\n"
@@ -86,6 +88,7 @@ public class Sai {
         this.say("Got it. I've added this task:\n" + this.list.get(last_pos) + "\n"
                 + "Now you have " + (last_pos + 1) + " tasks in the list.");
         last_pos += 1;
+        storage.save(list);
     }
 
     public void displayList() {
@@ -111,6 +114,7 @@ public class Sai {
                     Task item = this.list.get(index - 1);
                     item.mark();
                     this.say("Nice! I've marked this task as done:\n" + item);
+                    storage.save(list);
                 } else {
                     throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
@@ -131,6 +135,7 @@ public class Sai {
                     Task item = this.list.get(index - 1);
                     item.unmark();
                     this.say("OK, I've marked this task as not done yet: \n" + item);
+                    storage.save(list);
                 } else {
                     throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
@@ -232,6 +237,7 @@ public class Sai {
                     last_pos -= 1;
                     this.say("Noted. I have removed this task:\n" + item + "\n"
                             + "Now you have " + (last_pos) + " tasks in the list.");
+                    storage.save(list);
                 } else {
                     throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
@@ -243,6 +249,8 @@ public class Sai {
 
     public static void main(String[] args) {
         Sai mySai = new Sai();
+        mySai.list = mySai.storage.load();        // load saved tasks
+        mySai.last_pos = mySai.list.size();       // set last_pos correctly
         mySai.chat();
     }
 }
