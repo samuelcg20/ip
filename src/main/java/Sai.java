@@ -1,9 +1,7 @@
-import java.util.List;
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class Sai {
-    private List<Task> list = new ArrayList<>();
+    private TaskList taskList = new TaskList();
     private Storage storage = new Storage();
     private Ui ui = new Ui();
 
@@ -19,17 +17,17 @@ public class Sai {
         String[] inputList = Parser.extractPhrases(input);
 
         switch (inputList[0]) {
-            case "todo" -> this.list.add(new TodoTask(inputList[1]));
-            case "deadline" -> this.list.add(new DeadlineTask(inputList[1], inputList[2]));
-            case "event" -> this.list.add(new EventTask(inputList[1], inputList[2], inputList[3]));
+            case "todo" -> this.taskList.addTask(new TodoTask(inputList[1]));
+            case "deadline" -> this.taskList.addTask(new DeadlineTask(inputList[1], inputList[2]));
+            case "event" -> this.taskList.addTask(new EventTask(inputList[1], inputList[2], inputList[3]));
             default -> {
                 throw new InvalidTaskTypeException("Invalid Task Type");
             }
         }
 
-        ui.showAddedTask(this.list);
+        ui.showAddedTask(this.taskList);
 
-        storage.save(list);
+        storage.save(taskList);
     }
 
     public void delete(String input) throws InvalidTaskNumberException {
@@ -40,12 +38,12 @@ public class Sai {
         } else {
             try {
                 int index = Integer.parseInt(splitInput[1]);
-                if (index <= this.list.size()) {
-                    Task item = this.list.remove(index - 1);
+                if (index <= this.taskList.size()) {
+                    Task item = this.taskList.deleteTask(index - 1);
 
-                    ui.showDeletedTask(item, this.list.size());
+                    ui.showDeletedTask(item, this.taskList.size());
 
-                    storage.save(list);
+                    storage.save(taskList);
                 } else {
                     throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
@@ -62,13 +60,13 @@ public class Sai {
         } else {
             try {
                 int index = Integer.parseInt(splitInput[1]);
-                if (index <= this.list.size()) {
-                    Task item = this.list.get(index - 1);
+                if (index <= this.taskList.size()) {
+                    Task item = this.taskList.getTask(index - 1);
                     item.mark();
 
                     ui.showMarked(item);
 
-                    storage.save(list);
+                    storage.save(taskList);
                 } else {
                     throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
@@ -85,13 +83,13 @@ public class Sai {
         } else {
             try {
                 int index = Integer.parseInt(splitInput[1]);
-                if (index <= this.list.size()) {
-                    Task item = this.list.get(index - 1);
+                if (index <= this.taskList.size()) {
+                    Task item = this.taskList.getTask(index - 1);
                     item.unmark();
 
                     ui.showUnmarked(item);
 
-                    storage.save(list);
+                    storage.save(taskList);
                 } else {
                     throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
@@ -102,7 +100,7 @@ public class Sai {
     }
 
     public void displayList() {
-        ui.showTaskList(this.list);
+        ui.showTaskList(this.taskList);
     }
 
     public void chat() {
@@ -151,7 +149,7 @@ public class Sai {
 
     public static void main(String[] args) {
         Sai mySai = new Sai();
-        mySai.list = mySai.storage.load();      // set last_pos correctly
+        mySai.taskList = mySai.storage.load();
         mySai.chat();
     }
 }

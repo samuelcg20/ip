@@ -13,8 +13,8 @@ public class Storage {
      *
      * @return
      */
-    public List<Task> load() {
-        List<Task> taskList = new ArrayList<>();
+    public TaskList load() {
+        ArrayList<Task> taskList = new ArrayList<>();
         File file = new File(FILE_PATH);
 
         try {
@@ -25,7 +25,7 @@ public class Storage {
             }
             if (!file.exists()) {
                 file.createNewFile();
-                return taskList; // empty list if first run
+                return new TaskList(); // empty list if first run
             }
 
             List<String> lines = Files.readAllLines(Path.of(FILE_PATH));
@@ -41,19 +41,22 @@ public class Storage {
             System.out.println("Error reading file: " + e.getMessage());
         }
 
-        return taskList;
+        return new TaskList(taskList);
     }
 
     /**
      *
      * @param taskList
      */
-    public void save(List<Task> taskList) {
+    public void save(TaskList taskList) {
         try {
             FileWriter fw = new FileWriter(FILE_PATH);
-            for (Task task : taskList) {
+            ArrayList<Task> innerList = taskList.getTasks();
+
+            for (Task task : innerList) {
                 fw.write(formatTask(task) + System.lineSeparator());
             }
+
             fw.close();
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());

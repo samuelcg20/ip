@@ -23,8 +23,8 @@ public class Ui {
         System.out.println(wrap("Error: " + message));
     }
 
-    public void showAddedTask(List<Task> taskList) {
-        System.out.println(wrap("Got it. I've added this task:\n" + taskList.get(taskList.size() - 1) + "\n"
+    public void showAddedTask(TaskList taskList) {
+        System.out.println(wrap("Got it. I've added this task:\n" + taskList.getTask(taskList.size() - 1) + "\n"
                 + "Now you have " + (taskList.size()) + " tasks in the list."));
     }
 
@@ -33,16 +33,16 @@ public class Ui {
                 + "Now you have " + (size) + " tasks in the list."));
     }
 
-    public void showTaskList(List<Task> taskList) {
-        if (taskList.isEmpty()) {
+    public void showTaskList(TaskList taskList) {
+        if (taskList.size() == 0) {
             System.out.println("No tasks in your list.");
         } else {
             StringBuilder output = new StringBuilder("Here are the tasks in your list:\n");
             for (int i = 0; i < taskList.size(); i++) {
                 if (i == taskList.size() - 1) {
-                    output.append(String.format("%d. %s", i + 1, taskList.get(i)));
+                    output.append(String.format("%d. %s", i + 1, taskList.getTask(i)));
                 } else {
-                    output.append(String.format("%d. %s\n", i + 1, taskList.get(i)));
+                    output.append(String.format("%d. %s\n", i + 1, taskList.getTask(i)));
                 }
             }
             System.out.println(wrap(output.toString()));

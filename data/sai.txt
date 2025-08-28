@@ -1,2 +1,2 @@
-T | 0 | test
+T | 0 | name
 T | 0 | name
