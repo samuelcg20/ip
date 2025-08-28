@@ -8,8 +8,8 @@ public class EventTask extends Task{
 
     public EventTask(String description, String start, String end) {
         super(description);
-        this.start = DateTimeParser.parseDateTime(start);
-        this.end = DateTimeParser.parseDateTime(end);
+        this.start = Parser.parseDateTime(start);
+        this.end = Parser.parseDateTime(end);
     }
 
     public LocalDateTime getStart() {

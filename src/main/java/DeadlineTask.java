@@ -6,7 +6,7 @@ public class DeadlineTask extends Task {
 
     public DeadlineTask(String description, String by) {
         super(description);
-        this.by = DateTimeParser.parseDateTime(by);
+        this.by = Parser.parseDateTime(by);
     }
 
     public LocalDateTime getBy() {
