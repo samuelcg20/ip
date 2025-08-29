@@ -1,6 +1,7 @@
 package duke.list;
 
 import duke.task.Task;
+
 import java.util.ArrayList;
 
 /**
@@ -75,6 +76,16 @@ public class TaskList {
      */
     public ArrayList<Task> getTasks() {
         return tasks;
+    }
+
+    public ArrayList<Task> findTasks(String keyword) {
+        ArrayList<Task> results = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.getDescription().contains(keyword)) {
+                results.add(task);
+            }
+        }
+        return results;
     }
 
     /**

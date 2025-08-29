@@ -15,6 +15,8 @@ import duke.exceptions.InvalidTaskFormatException;
 import duke.exceptions.InvalidTaskNumberException;
 import duke.exceptions.InvalidTaskTypeException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -57,7 +59,7 @@ public class Sai {
             case "deadline" -> this.taskList.addTask(new DeadlineTask(inputList[1], inputList[2]));
             case "event" -> this.taskList.addTask(new EventTask(inputList[1], inputList[2], inputList[3]));
             default -> {
-                throw new InvalidTaskTypeException("Invalid duke.task.Task Type");
+                throw new InvalidTaskTypeException("Invalid Task Type");
             }
         }
 
@@ -87,7 +89,7 @@ public class Sai {
 
                     storage.save(taskList);
                 } else {
-                    throw new InvalidTaskNumberException("duke.task.Task number " + index + " does not exist");
+                    throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
             } catch (NumberFormatException e){
                 ui.formatMessageWarning("delete");
@@ -116,7 +118,7 @@ public class Sai {
 
                     storage.save(taskList);
                 } else {
-                    throw new InvalidTaskNumberException("duke.task.Task number " + index + " does not exist");
+                    throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
             } catch (NumberFormatException e){
                 ui.formatMessageWarning("mark");
@@ -145,7 +147,7 @@ public class Sai {
 
                     storage.save(taskList);
                 } else {
-                    throw new InvalidTaskNumberException("duke.task.Task number " + index + " does not exist");
+                    throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
             } catch (NumberFormatException e){
                 ui.formatMessageWarning("unmark");
@@ -156,6 +158,25 @@ public class Sai {
     /**
      * Displays the full list of tasks.
      */
+    public void find(String input) throws InvalidTaskFormatException {
+        String[] words = input.toLowerCase().split(" ", 2);
+        if (words.length < 2) {
+            throw new InvalidTaskFormatException("please input keyword to be found");
+        }
+        String keyword = words[1];
+        ArrayList<Task> found = taskList.findTasks(keyword);
+
+        if (found.isEmpty()) {
+            ui.showMessage("No matching tasks found.");
+        } else {
+            StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
+            for (int i = 0; i < found.size(); i++) {
+                sb.append((i + 1)).append(". ").append(found.get(i)).append("\n");
+            }
+            ui.showMessage(sb.toString().trim());
+        }
+    }
+
     public void displayList() {
         ui.showTaskList(this.taskList);
     }
@@ -171,28 +192,35 @@ public class Sai {
         this.greet();
         String input = scanner.nextLine();
 
-        while (!input.equalsIgnoreCase("bye")) {
+        while (!input.equalsIgnoreCase("bye ")) {
             if (input.equalsIgnoreCase("list")) {
                 this.displayList();
                 input = scanner.nextLine();
-            } else if (input.toLowerCase().startsWith("mark")) {
+            } else if (input.toLowerCase().startsWith("mark ")) {
                 try {
                     this.mark(input);
                 } catch (InvalidTaskNumberException e) {
                     ui.showError(e.getMessage());
                 }
                 input = scanner.nextLine();
-            } else if (input.toLowerCase().startsWith("unmark")) {
+            } else if (input.toLowerCase().startsWith("unmark ")) {
                 try {
                     this.unmark(input);
                 } catch (InvalidTaskNumberException e) {
                     ui.showError(e.getMessage());
                 }
                 input = scanner.nextLine();
-            } else if (input.toLowerCase().startsWith("delete")) {
+            } else if (input.toLowerCase().startsWith("delete ")) {
                 try {
                     this.delete(input);
                 } catch (InvalidTaskNumberException e) {
+                    ui.showError(e.getMessage());
+                }
+                input = scanner.nextLine();
+            } else if (input.toLowerCase().startsWith("find ")) {
+                try {
+                    this.find(input);
+                } catch (InvalidTaskFormatException e) {
                     ui.showError(e.getMessage());
                 }
                 input = scanner.nextLine();

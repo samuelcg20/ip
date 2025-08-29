@@ -105,5 +105,9 @@ public class Ui {
     public void formatMessageWarning(String format) {
         System.out.println(wrap("Please format your message as \"" + format + " [task number]\""));
     }
+
+    public void showMessage(String message) {
+        System.out.println(wrap(message));
+    }
 }
 
