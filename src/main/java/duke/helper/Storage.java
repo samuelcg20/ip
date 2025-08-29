@@ -13,12 +13,27 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles the saving and loading of tasks from the local storage file.
+ * <p>
+ * Each line in the file represents one task in a specific format:
+ * <ul>
+ *     <li>Todo: {@code T | isDone | description}</li>
+ *     <li>Deadline: {@code D | isDone | description | by}</li>
+ *     <li>Event: {@code E | isDone | description | start | end}</li>
+ * </ul>
+ */
 public class Storage {
     private static final String FILE_PATH = "./data/sai.txt";
 
     /**
+     * Loads tasks from the storage file.
+     * <p>
+     * If the file or its parent directories do not exist, they are created.
+     * If the file is empty, an empty {@link TaskList} is returned.
+     * Lines that cannot be parsed are skipped with a warning message.
      *
-     * @return
+     * @return A {@link TaskList} containing all tasks read from storage.
      */
     public TaskList load() {
         ArrayList<Task> taskList = new ArrayList<>();
@@ -52,8 +67,11 @@ public class Storage {
     }
 
     /**
+     * Saves the given {@link TaskList} to the storage file.
+     * <p>
+     * Each task is formatted according to its type and written on a new line.
      *
-     * @param taskList
+     * @param taskList The {@link TaskList} to save.
      */
     public void save(TaskList taskList) {
         try {
@@ -70,6 +88,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses a single line from the storage file into a {@link Task}.
+     *
+     * @param line A formatted string representing a task.
+     * @return A {@link Task} object corresponding to the line.
+     * @throws IllegalArgumentException If the task type is invalid.
+     */
     private Task readLine(String line) {
         String[] parts = line.split(" \\| ");
         String type = parts[0];
@@ -96,6 +121,14 @@ public class Storage {
         return task;
     }
 
+    /**
+     * Converts a {@link Task} object into a string representation
+     * suitable for saving into the storage file.
+     *
+     * @param task The {@link Task} to format.
+     * @return A formatted string representation of the task.
+     * @throws IllegalArgumentException If the task type is unknown.
+     */
     private String formatTask(Task task) {
         String status = task.isDone() ? "1" : "0";
         if (task instanceof TodoTask) {
