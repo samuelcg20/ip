@@ -1,3 +1,17 @@
+package duke;
+
+import duke.helper.Parser;
+import duke.helper.Storage;
+import duke.helper.Ui;
+import duke.task.Task;
+import duke.task.DeadlineTask;
+import duke.task.TodoTask;
+import duke.task.EventTask;
+import duke.list.TaskList;
+import duke.exceptions.InvalidTaskFormatException;
+import duke.exceptions.InvalidTaskNumberException;
+import duke.exceptions.InvalidTaskTypeException;
+
 import java.util.Scanner;
 
 public class Sai {
@@ -21,7 +35,7 @@ public class Sai {
             case "deadline" -> this.taskList.addTask(new DeadlineTask(inputList[1], inputList[2]));
             case "event" -> this.taskList.addTask(new EventTask(inputList[1], inputList[2], inputList[3]));
             default -> {
-                throw new InvalidTaskTypeException("Invalid Task Type");
+                throw new InvalidTaskTypeException("Invalid duke.task.Task Type");
             }
         }
 
@@ -45,7 +59,7 @@ public class Sai {
 
                     storage.save(taskList);
                 } else {
-                    throw new InvalidTaskNumberException("Task number " + index + " does not exist");
+                    throw new InvalidTaskNumberException("duke.task.Task number " + index + " does not exist");
                 }
             } catch (NumberFormatException e){
                 ui.formatMessageWarning("delete");
@@ -53,7 +67,7 @@ public class Sai {
         }
     }
 
-    public void mark(String input) throws InvalidTaskNumberException{
+    public void mark(String input) throws InvalidTaskNumberException {
         String[] splitInput = input.split(" ");
         if (splitInput.length != 2) {
             ui.formatMessageWarning("mark");
@@ -68,7 +82,7 @@ public class Sai {
 
                     storage.save(taskList);
                 } else {
-                    throw new InvalidTaskNumberException("Task number " + index + " does not exist");
+                    throw new InvalidTaskNumberException("duke.task.Task number " + index + " does not exist");
                 }
             } catch (NumberFormatException e){
                 ui.formatMessageWarning("mark");
@@ -76,7 +90,7 @@ public class Sai {
         }
     }
 
-    public void unmark(String input) throws InvalidTaskNumberException{
+    public void unmark(String input) throws InvalidTaskNumberException {
         String[] splitInput = input.split(" ");
         if (splitInput.length != 2) {
             ui.formatMessageWarning("unmark");
@@ -91,7 +105,7 @@ public class Sai {
 
                     storage.save(taskList);
                 } else {
-                    throw new InvalidTaskNumberException("Task number " + index + " does not exist");
+                    throw new InvalidTaskNumberException("duke.task.Task number " + index + " does not exist");
                 }
             } catch (NumberFormatException e){
                 ui.formatMessageWarning("unmark");

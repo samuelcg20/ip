@@ -1,4 +1,7 @@
-import java.util.List;
+package duke.helper;
+
+import duke.list.TaskList;
+import duke.task.Task;
 
 public class Ui {
     private String wrap(String message) {
