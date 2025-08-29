@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import duke.exceptions.InvalidTaskFormatException;
 
 public class Parser {
     private static final DateTimeFormatter[] DATE_FORMATS = new DateTimeFormatter[]{
@@ -56,22 +57,22 @@ public class Parser {
                     task = words[1].trim();
                     return new String[] {firstWord, task};
                 } else {
-                    throw new InvalidTaskFormatException("Todo duke.task.Task cannot be empty");
+                    throw new InvalidTaskFormatException("Todo Task cannot be empty");
                 }
 
             }
 
             case "deadline" -> {
                 // After first word up to /by
-                int byIndex = input.indexOf("/by");
+                int byIndex = input.indexOf("/by ");
                 if (words.length > 1) {
                     if (byIndex != -1) {
                         task = input.substring(firstWord.length(), byIndex).trim();
                     } else {
-                        throw new InvalidTaskFormatException("Deadline duke.task.Task needs a /by statement");
+                        throw new InvalidTaskFormatException("Deadline Task needs a /by statement");
                     }
                 } else {
-                    throw new InvalidTaskFormatException("Deadline duke.task.Task cannot be empty");
+                    throw new InvalidTaskFormatException("Deadline Task cannot be empty");
                 }
 
                 // Extract after /to
@@ -82,23 +83,23 @@ public class Parser {
 
             case "event" -> {
                 // After first word up to /from
-                int fromIndex = input.indexOf("/from");
+                int fromIndex = input.indexOf("/from ");
                 if (words.length > 1) {
                     if (fromIndex != -1) {
                         task = input.substring(firstWord.length(), fromIndex).trim();
                     } else {
-                        throw new InvalidTaskFormatException("Event duke.task.Task needs a /from statement");
+                        throw new InvalidTaskFormatException("Event Task needs a /from statement");
                     }
                 } else {
-                    throw new InvalidTaskFormatException("Event duke.task.Task cannot be empty");
+                    throw new InvalidTaskFormatException("Event Task cannot be empty");
                 }
 
                 // Extract between /from and /to
-                int toIndex = input.indexOf("/to");
+                int toIndex = input.indexOf("/to ");
                 if (toIndex != -1 && fromIndex < toIndex) {
                     from = input.substring(fromIndex + 6, toIndex).trim();
                 } else {
-                    throw new InvalidTaskFormatException("Event duke.task.Task needs a /to statement that comes after /from");
+                    throw new InvalidTaskFormatException("Event Task needs a /to statement that comes after /from");
                 }
 
                 // Extract after /to
