@@ -75,7 +75,7 @@ public class Ui {
         if (taskList.size() == 0) {
             System.out.println("No tasks in your list.");
         } else {
-            taskList.listTasks();
+            System.out.println(taskList.listTasks());
         }
     }
 
