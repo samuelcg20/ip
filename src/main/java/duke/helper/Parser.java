@@ -6,7 +6,25 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import duke.exceptions.InvalidTaskFormatException;
 
+/**
+ * The {@code Parser} class provides utility methods for parsing user input
+ * into structured components such as dates, times, and task details.
+ * <p>
+ * It supports multiple date-time formats and can extract key phrases
+ * for different task types like {@code todo}, {@code deadline}, and {@code event}.
+ */
 public class Parser {
+
+    /**
+     * An array of supported {@link DateTimeFormatter} patterns used
+     * when parsing user-provided date-time strings.
+     * <ul>
+     *     <li>{@code yyyy-MM-dd HHmm} e.g. {@code 2019-12-02 1800}</li>
+     *     <li>{@code yyyy-MM-dd} e.g. {@code 2019-12-02}</li>
+     *     <li>{@code d/M/yyyy HHmm} e.g. {@code 2/12/2019 1800}</li>
+     *     <li>{@code d/M/yyyy} e.g. {@code 2/12/2019}</li>
+     * </ul>
+     */
     private static final DateTimeFormatter[] DATE_FORMATS = new DateTimeFormatter[]{
             DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"), // e.g. 2019-12-02 1800
             DateTimeFormatter.ofPattern("yyyy-MM-dd"),      // e.g. 2019-12-02
@@ -15,6 +33,16 @@ public class Parser {
     };
 
 
+    /**
+     * Attempts to parse a date-time string into a {@link LocalDateTime}.
+     * <p>
+     * The method iterates over multiple possible date and date-time formats.
+     * If only a date is supplied (no time), it defaults to 23:59 on that day.
+     *
+     * @param input the raw date-time string entered by the user
+     * @return a parsed {@link LocalDateTime} representing the input
+     * @throws IllegalArgumentException if the input cannot be parsed with any supported format
+     */
     public static LocalDateTime parseDateTime(String input) {
         for (DateTimeFormatter fmt : DATE_FORMATS) {
             // Try parsing into LocalDateTime
@@ -35,6 +63,25 @@ public class Parser {
         throw new IllegalArgumentException("Unrecognised date format: " + input);
     }
 
+    /**
+     * Extracts task-related phrases from a raw user input string.
+     * <p>
+     * Recognises three types of commands:
+     * <ul>
+     *     <li><b>todo</b>: requires only a description</li>
+     *     <li><b>deadline</b>: requires a description and a {@code /by} clause</li>
+     *     <li><b>event</b>: requires a description, a {@code /from} clause, and a {@code /to} clause</li>
+     * </ul>
+     *
+     * @param input the raw user input string
+     * @return an array of extracted components:
+     *         <ul>
+     *             <li>For {@code todo}: [command, description]</li>
+     *             <li>For {@code deadline}: [command, description, by]</li>
+     *             <li>For {@code event}: [command, description, from, to]</li>
+     *         </ul>
+     * @throws InvalidTaskFormatException if the input is missing required parts or has invalid structure
+     */
     public static String[] extractPhrases(String input) throws InvalidTaskFormatException {
         String firstWord = "";
         String task = "";

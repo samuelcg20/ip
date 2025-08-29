@@ -14,19 +14,38 @@ import duke.exceptions.InvalidTaskTypeException;
 
 import java.util.Scanner;
 
+/**
+ * The main chatbot class for Sai, a task management assistant.
+ * <p>
+ * Supports adding, deleting, marking, unmarking, and listing tasks.
+ * Tasks are persisted using {@link Storage} and displayed using {@link Ui}.
+ */
 public class Sai {
     private TaskList taskList = new TaskList();
     private Storage storage = new Storage();
     private Ui ui = new Ui();
 
+    /**
+     * Greets the user with a welcome message.
+     */
     public void greet() {
         ui.showWelcome();
     }
 
+    /**
+     * Displays a farewell message when the program ends.
+     */
     public void farewell() {
         ui.showGoodbye();
     }
 
+    /**
+     * Adds a new task to the list based on user input.
+     *
+     * @param input raw input string (e.g., "todo read book", "deadline project /by 2025-09-01")
+     * @throws InvalidTaskTypeException   if the task type is not recognised
+     * @throws InvalidTaskFormatException if the input format is invalid
+     */
     public void addToList(String input) throws InvalidTaskTypeException, InvalidTaskFormatException {
         String[] inputList = Parser.extractPhrases(input);
 
@@ -44,6 +63,12 @@ public class Sai {
         storage.save(taskList);
     }
 
+    /**
+     * Deletes a task based on the provided index in the input.
+     *
+     * @param input user command in the form "delete INDEX"
+     * @throws InvalidTaskNumberException if the index is invalid or out of range
+     */
     public void delete(String input) throws InvalidTaskNumberException {
         String[] splitInput = input.split(" ");
 
@@ -67,6 +92,12 @@ public class Sai {
         }
     }
 
+    /**
+     * Marks a task as completed.
+     *
+     * @param input user command in the form "mark INDEX"
+     * @throws InvalidTaskNumberException if the index is invalid or out of range
+     */
     public void mark(String input) throws InvalidTaskNumberException {
         String[] splitInput = input.split(" ");
         if (splitInput.length != 2) {
@@ -90,6 +121,12 @@ public class Sai {
         }
     }
 
+    /**
+     * Unmarks a task (marks it as not completed).
+     *
+     * @param input user command in the form "unmark INDEX"
+     * @throws InvalidTaskNumberException if the index is invalid or out of range
+     */
     public void unmark(String input) throws InvalidTaskNumberException {
         String[] splitInput = input.split(" ");
         if (splitInput.length != 2) {
@@ -113,10 +150,19 @@ public class Sai {
         }
     }
 
+    /**
+     * Displays the full list of tasks.
+     */
     public void displayList() {
         ui.showTaskList(this.taskList);
     }
 
+    /**
+     * Starts the chatbot loop.
+     * <p>
+     * Accepts user commands until "bye" is entered.
+     * Supports commands: list, mark, unmark, delete, todo, deadline, event.
+     */
     public void chat() {
         Scanner scanner = new Scanner(System.in);
         this.greet();
@@ -161,6 +207,12 @@ public class Sai {
         this.farewell();
     }
 
+    /**
+     * Main entry point for Sai.
+     * Loads stored tasks and begins the chatbot loop.
+     *
+     * @param args command line arguments (unused)
+     */
     public static void main(String[] args) {
         Sai mySai = new Sai();
         mySai.taskList = mySai.storage.load();
