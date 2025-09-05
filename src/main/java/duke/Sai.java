@@ -33,15 +33,15 @@ public class Sai {
     /**
      * Greets the user with a welcome message.
      */
-    public void greet() {
-        ui.showWelcome();
+    public String greet() {
+        return ui.showWelcome();
     }
 
     /**
      * Displays a farewell message when the program ends.
      */
-    public void farewell() {
-        ui.showGoodbye();
+    public String farewell() {
+        return ui.showGoodbye();
     }
 
     /**
@@ -51,21 +51,21 @@ public class Sai {
      * @throws InvalidTaskTypeException   if the task type is not recognised
      * @throws InvalidTaskFormatException if the input format is invalid
      */
-    public void addToList(String input) throws InvalidTaskTypeException, InvalidTaskFormatException {
+    public String addToList(String input) throws InvalidTaskTypeException, InvalidTaskFormatException {
         String[] inputList = Parser.extractPhrases(input);
 
         switch (inputList[0]) {
-            case "todo" -> this.taskList.addTask(new TodoTask(inputList[1]));
-            case "deadline" -> this.taskList.addTask(new DeadlineTask(inputList[1], inputList[2]));
-            case "event" -> this.taskList.addTask(new EventTask(inputList[1], inputList[2], inputList[3]));
-            default -> {
-                throw new InvalidTaskTypeException("Invalid Task Type");
-            }
+        case "todo" -> this.taskList.addTask(new TodoTask(inputList[1]));
+        case "deadline" -> this.taskList.addTask(new DeadlineTask(inputList[1], inputList[2]));
+        case "event" -> this.taskList.addTask(new EventTask(inputList[1], inputList[2], inputList[3]));
+        default -> {
+            throw new InvalidTaskTypeException("Invalid Task Type");
+        }
         }
 
-        ui.showAddedTask(this.taskList);
-
         storage.save(taskList);
+
+        return ui.showAddedTask(this.taskList);
     }
 
     /**
@@ -74,25 +74,25 @@ public class Sai {
      * @param input user command in the form "delete INDEX"
      * @throws InvalidTaskNumberException if the index is invalid or out of range
      */
-    public void delete(String input) throws InvalidTaskNumberException {
+    public String delete(String input) throws InvalidTaskNumberException {
         String[] splitInput = input.split(" ");
 
         if (splitInput.length != 2) {
-            ui.formatMessageWarning("delete");
+            return ui.formatMessageWarning("delete");
         } else {
             try {
                 int index = Integer.parseInt(splitInput[1]);
                 if (index <= this.taskList.size()) {
                     Task item = this.taskList.deleteTask(index - 1);
 
-                    ui.showDeletedTask(item, this.taskList.size());
-
                     storage.save(taskList);
+
+                    return ui.showDeletedTask(item, this.taskList.size());
                 } else {
                     throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
-            } catch (NumberFormatException e){
-                ui.formatMessageWarning("delete");
+            } catch (NumberFormatException e) {
+                return ui.formatMessageWarning("delete");
             }
         }
     }
@@ -103,10 +103,10 @@ public class Sai {
      * @param input user command in the form "mark INDEX"
      * @throws InvalidTaskNumberException if the index is invalid or out of range
      */
-    public void mark(String input) throws InvalidTaskNumberException {
+    public String mark(String input) throws InvalidTaskNumberException {
         String[] splitInput = input.split(" ");
         if (splitInput.length != 2) {
-            ui.formatMessageWarning("mark");
+            return ui.formatMessageWarning("mark");
         } else {
             try {
                 int index = Integer.parseInt(splitInput[1]);
@@ -114,14 +114,14 @@ public class Sai {
                     Task item = this.taskList.getTask(index - 1);
                     item.mark();
 
-                    ui.showMarked(item);
-
                     storage.save(taskList);
+
+                    return ui.showMarked(item);
                 } else {
                     throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
-            } catch (NumberFormatException e){
-                ui.formatMessageWarning("mark");
+            } catch (NumberFormatException e) {
+                return ui.formatMessageWarning("mark");
             }
         }
     }
@@ -132,10 +132,10 @@ public class Sai {
      * @param input user command in the form "unmark INDEX"
      * @throws InvalidTaskNumberException if the index is invalid or out of range
      */
-    public void unmark(String input) throws InvalidTaskNumberException {
+    public String unmark(String input) throws InvalidTaskNumberException {
         String[] splitInput = input.split(" ");
         if (splitInput.length != 2) {
-            ui.formatMessageWarning("unmark");
+            return ui.formatMessageWarning("unmark");
         } else {
             try {
                 int index = Integer.parseInt(splitInput[1]);
@@ -143,14 +143,14 @@ public class Sai {
                     Task item = this.taskList.getTask(index - 1);
                     item.unmark();
 
-                    ui.showUnmarked(item);
-
                     storage.save(taskList);
+
+                    return ui.showUnmarked(item);
                 } else {
                     throw new InvalidTaskNumberException("Task number " + index + " does not exist");
                 }
-            } catch (NumberFormatException e){
-                ui.formatMessageWarning("unmark");
+            } catch (NumberFormatException e) {
+                return ui.formatMessageWarning("unmark");
             }
         }
     }
@@ -158,7 +158,7 @@ public class Sai {
     /**
      * Displays the full list of tasks.
      */
-    public void find(String input) throws InvalidTaskFormatException {
+    public String find(String input) throws InvalidTaskFormatException {
         String[] words = input.toLowerCase().split(" ", 2);
         if (words.length < 2) {
             throw new InvalidTaskFormatException("please input keyword to be found");
@@ -167,75 +167,57 @@ public class Sai {
         ArrayList<Task> found = taskList.findTasks(keyword);
 
         if (found.isEmpty()) {
-            ui.showMessage("No matching tasks found.");
+            return ui.showMessage("No matching tasks found.");
         } else {
             StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
             for (int i = 0; i < found.size(); i++) {
                 sb.append((i + 1)).append(". ").append(found.get(i)).append("\n");
             }
-            ui.showMessage(sb.toString().trim());
+            return ui.showMessage(sb.toString().trim());
         }
     }
 
-    public void displayList() {
-        ui.showTaskList(this.taskList);
+    public String displayList() {
+        return ui.showTaskList(this.taskList);
     }
 
-    /**
-     * Starts the chatbot loop.
-     * <p>
-     * Accepts user commands until "bye" is entered.
-     * Supports commands: list, mark, unmark, delete, todo, deadline, event.
-     */
-    public void chat() {
-        Scanner scanner = new Scanner(System.in);
-        this.greet();
-        String input = scanner.nextLine();
 
-        while (!input.equalsIgnoreCase("bye ")) {
-            if (input.equalsIgnoreCase("list")) {
-                this.displayList();
-                input = scanner.nextLine();
-            } else if (input.toLowerCase().startsWith("mark ")) {
-                try {
-                    this.mark(input);
-                } catch (InvalidTaskNumberException e) {
-                    ui.showError(e.getMessage());
-                }
-                input = scanner.nextLine();
-            } else if (input.toLowerCase().startsWith("unmark ")) {
-                try {
-                    this.unmark(input);
-                } catch (InvalidTaskNumberException e) {
-                    ui.showError(e.getMessage());
-                }
-                input = scanner.nextLine();
-            } else if (input.toLowerCase().startsWith("delete ")) {
-                try {
-                    this.delete(input);
-                } catch (InvalidTaskNumberException e) {
-                    ui.showError(e.getMessage());
-                }
-                input = scanner.nextLine();
-            } else if (input.toLowerCase().startsWith("find ")) {
-                try {
-                    this.find(input);
-                } catch (InvalidTaskFormatException e) {
-                    ui.showError(e.getMessage());
-                }
-                input = scanner.nextLine();
+    public String getResponse(String input) {
+        if (input.equalsIgnoreCase("list")) {
+            return this.displayList();
+        } else if (input.toLowerCase().startsWith("mark ")) {
+            try {
+                return this.mark(input);
+            } catch (InvalidTaskNumberException e) {
+                return e.getMessage();
             }
-            else {
-                try {
-                    this.addToList(input);
-                } catch (InvalidTaskTypeException | InvalidTaskFormatException e) {
-                    ui.showError(e.getMessage());
-                }
-                input = scanner.nextLine();
+        } else if (input.toLowerCase().startsWith("unmark ")) {
+            try {
+                return this.unmark(input);
+            } catch (InvalidTaskNumberException e) {
+                return e.getMessage();
+            }
+        } else if (input.toLowerCase().startsWith("delete ")) {
+            try {
+                return this.delete(input);
+            } catch (InvalidTaskNumberException e) {
+                return e.getMessage();
+            }
+        } else if (input.toLowerCase().startsWith("find ")) {
+            try {
+                return this.find(input);
+            } catch (InvalidTaskFormatException e) {
+                return e.getMessage();
+            }
+        } else if (input.equalsIgnoreCase("bye")) {
+            return this.farewell();
+        } else {
+            try {
+                return this.addToList(input);
+            } catch (InvalidTaskTypeException | InvalidTaskFormatException e) {
+                return e.getMessage();
             }
         }
-
-        this.farewell();
     }
 
     /**
@@ -247,6 +229,5 @@ public class Sai {
     public static void main(String[] args) {
         Sai mySai = new Sai();
         mySai.taskList = mySai.storage.load();
-        mySai.chat();
     }
 }
