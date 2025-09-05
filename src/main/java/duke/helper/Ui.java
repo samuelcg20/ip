@@ -19,21 +19,21 @@ public class Ui {
     private String wrap(String message) {
         return "-------------------------------------------------\n"
                 + message
-                +"\n-------------------------------------------------";
+                + "\n-------------------------------------------------";
     }
 
     /**
      * Displays the welcome message when the program starts.
      */
-    public void showWelcome() {
-        System.out.println(wrap("Hello! I'm S.AI\nWhat can I do for you?"));
+    public String showWelcome() {
+        return "Hello! I'm S.AI\nWhat can I do for you?";
     }
 
     /**
      * Displays the goodbye message when the program ends.
      */
-    public void showGoodbye() {
-        System.out.println(wrap("Bye. Hope to see you again soon!"));
+    public String showGoodbye() {
+        return "Bye. Hope to see you again soon!";
     }
 
     /**
@@ -41,8 +41,8 @@ public class Ui {
      *
      * @param message the error message to display
      */
-    public void showError(String message) {
-        System.out.println(wrap("Error: " + message));
+    public String showError(String message) {
+        return "Error: " + message;
     }
 
     /**
@@ -50,9 +50,9 @@ public class Ui {
      *
      * @param taskList the task list containing the newly added task
      */
-    public void showAddedTask(TaskList taskList) {
-        System.out.println(wrap("Got it. I've added this task:\n" + taskList.getTask(taskList.size() - 1) + "\n"
-                + "Now you have " + (taskList.size()) + " tasks in the list."));
+    public String showAddedTask(TaskList taskList) {
+        return "Got it. I've added this task:\n" + taskList.getTask(taskList.size() - 1) + "\n"
+                + "Now you have " + (taskList.size()) + " tasks in the list.";
     }
 
     /**
@@ -61,9 +61,9 @@ public class Ui {
      * @param task the task that was removed
      * @param size current size of the task list after deletion
      */
-    public void showDeletedTask(Task task, int size) {
-        System.out.println(wrap("Noted. I have removed this task:\n" + task + "\n"
-                + "Now you have " + (size) + " tasks in the list."));
+    public String showDeletedTask(Task task, int size) {
+        return "Noted. I have removed this task:\n" + task + "\n"
+                + "Now you have " + (size) + " tasks in the list.";
     }
 
     /**
@@ -71,11 +71,11 @@ public class Ui {
      *
      * @param taskList the task list to display
      */
-    public void showTaskList(TaskList taskList) {
+    public String showTaskList(TaskList taskList) {
         if (taskList.size() == 0) {
-            System.out.println("No tasks in your list.");
+            return "No tasks in your list.";
         } else {
-            System.out.println(taskList.listTasks());
+            return taskList.listTasks();
         }
     }
 
@@ -84,8 +84,8 @@ public class Ui {
      *
      * @param task the task that was marked
      */
-    public void showMarked(Task task) {
-        System.out.println(wrap("Nice! I've marked this task as done:\n" + task));
+    public String showMarked(Task task) {
+        return "Nice! I've marked this task as done:\n" + task;
     }
 
     /**
@@ -93,8 +93,8 @@ public class Ui {
      *
      * @param task the task that was unmarked
      */
-    public void showUnmarked(Task task) {
-        System.out.println(wrap("OK, I've marked this task as not done yet: \n" + task));
+    public String showUnmarked(Task task) {
+        return "OK, I've marked this task as not done yet: \n" + task;
     }
 
     /**
@@ -102,12 +102,12 @@ public class Ui {
      *
      * @param format the expected format string
      */
-    public void formatMessageWarning(String format) {
-        System.out.println(wrap("Please format your message as \"" + format + " [task number]\""));
+    public String formatMessageWarning(String format) {
+        return "Please format your message as \"" + format + " [task number]\"";
     }
 
-    public void showMessage(String message) {
-        System.out.println(wrap(message));
+    public String showMessage(String message) {
+        return message;
     }
 }
 
