@@ -61,5 +61,30 @@ public abstract class Task {
         return (isDone ? "X" : " "); // mark done task with X
     }
 
+    /**
+     * Returns a string representation of the task,
+     * showing its completion status and description.
+     *
+     * @return formatted string of the task
+     */
+    @Override
+    public String toString() {
+        return String.format("[%s] %s", this.getStatusIcon(), this.description);
+    }
+
+    /**
+     * Converts this task into a string suitable for persistent storage.
+     * <p>
+     * Each concrete subclass should implement this method to provide a
+     * formatted string that can be easily parsed when loading tasks
+     * from storage. Typically, the format includes:
+     * <ul>
+     *     <li>Task type indicator (e.g., "T", "D", "E")</li>
+     *     <li>Completion status (0 = not done, 1 = done)</li>
+     *     <li>Description and any subclass-specific fields (e.g., deadlines, event times)</li>
+     * </ul>
+     *
+     * @return a formatted string representing this task for storage
+     */
     public abstract String toStorageString();
 }
