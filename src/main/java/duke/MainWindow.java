@@ -34,6 +34,11 @@ public class MainWindow extends AnchorPane {
     /** Injects the Sai instance */
     public void setDuke(Sai s) {
         sai = s;
+
+        // Show Sai's welcome message immediately
+        dialogContainer.getChildren().add(
+                DialogBox.getDukeDialog(sai.greet(), dukeImage)
+        );
     }
 
     /**
