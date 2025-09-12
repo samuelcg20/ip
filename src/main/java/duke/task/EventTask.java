@@ -1,9 +1,9 @@
 package duke.task;
 
-import duke.helper.Parser;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import duke.helper.Parser;
 
 /**
  * Represents an event task with a start and end date/time.
@@ -42,6 +42,27 @@ public class EventTask extends Task {
      */
     public LocalDateTime getEnd() {
         return end;
+    }
+
+    /**
+     * Converts this {@link EventTask} into a string suitable for storage.
+     * <p>
+     * The format is designed to be easily parsed when loading tasks from storage:
+     * <pre>
+     *     E | 0 or 1 | description | start | end
+     * </pre>
+     * where "E" indicates an EventTask, "0" or "1" represents whether the task is done,
+     * followed by the task description, start time, and end time.
+     *
+     * @return a formatted string representing this EventTask for persistent storage
+     */
+    @Override
+    public String toStorageString() {
+        return "E | "
+                + (this.isDone() ? "1" : "0")
+                + " | " + this.getDescription()
+                + " | " + this.getStart()
+                + " | " + this.getEnd();
     }
 
     /**
