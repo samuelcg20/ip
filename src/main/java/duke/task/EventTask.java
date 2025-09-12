@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import duke.helper.Parser;
+import jdk.jfr.Event;
 
 /**
  * Represents an event task with a start and end date/time.
@@ -76,5 +77,15 @@ public class EventTask extends Task {
         return "[E]" + super.toString()
                 + " (from: " + start.format(DateTimeFormatter.ofPattern("MMM d yyyy, h:mma"))
                 + " to: " + end.format(DateTimeFormatter.ofPattern("MMM d yyyy, h:mma")) + ")";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof EventTask) {
+            return ((EventTask) o).getDescription().equals(this.getDescription())
+                    && ((EventTask) o).getStart().equals(this.getStart())
+                    && ((EventTask) o).getEnd().equals(this.getEnd());
+        }
+        return false;
     }
 }

@@ -62,4 +62,13 @@ public class DeadlineTask extends Task {
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by.format(DateTimeFormatter.ofPattern("MMM d yyyy, h:mma")) + ")";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof DeadlineTask) {
+            return ((DeadlineTask) o).getDescription().equals(this.getDescription())
+                    && ((DeadlineTask) o).getBy().equals(this.getBy());
+        }
+        return false;
+    }
 }

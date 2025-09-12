@@ -76,27 +76,26 @@ public class Sai {
      */
     public String addToList(String input) throws InvalidTaskTypeException, InvalidTaskFormatException {
         String[] inputList = Parser.extractPhrases(input);
+        Task newTask;
 
         switch (inputList[0]) {
-        case "todo" -> {
-            assert inputList.length == 2 : "Todo task must only have type and description";
-            this.taskList.addTask(new TodoTask(inputList[1]));
-        }
-        case "deadline" -> {
-            assert inputList.length == 3 : "Deadline task must have type, description, and by";
-            this.taskList.addTask(new DeadlineTask(inputList[1], inputList[2]));
-        }
-        case "event" -> {
-            assert inputList.length == 4 : "Event task must have type, description, start, and end";
-            this.taskList.addTask(new EventTask(inputList[1], inputList[2], inputList[3]));
-        }
+        case "todo" -> newTask = new TodoTask(inputList[1]);
+        case "deadline" -> newTask = new DeadlineTask(inputList[1], inputList[2]);
+        case "event" -> newTask = new EventTask(inputList[1], inputList[2], inputList[3]);
         default -> throw new InvalidTaskTypeException("Invalid Task Type");
         }
 
-        storage.save(taskList);
+        // Check for duplicates
+        if (this.taskList.contains(newTask)) {
+            return ui.showError("Duplicate task detected. Task not added.");
+        }
 
+        // Add to taskList if not duplicate
+        this.taskList.addTask(newTask);
+        storage.save(taskList);
         return ui.showAddedTask(this.taskList);
     }
+
 
     /**
      * Deletes a task from the task list based on the user's input.

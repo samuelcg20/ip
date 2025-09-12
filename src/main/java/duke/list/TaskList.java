@@ -78,6 +78,18 @@ public class TaskList {
         return tasks;
     }
 
+    /**
+     * Searches the current task list for tasks that contain the specified keyword
+     * in their description.
+     * <p>
+     * The search returns all tasks whose descriptions
+     * include the keyword as a substring.
+     *
+     * @param keyword the string to search for in task descriptions
+     * @return an {@link ArrayList} of {@link Task} objects whose descriptions
+     *         contain the specified keyword; if no matches are found, the
+     *         returned list will be empty
+     */
     public ArrayList<Task> findTasks(String keyword) {
         ArrayList<Task> results = new ArrayList<>();
         for (Task task : tasks) {
@@ -99,6 +111,23 @@ public class TaskList {
             sb.append((i + 1)).append(". ").append(tasks.get(i)).append("\n");
         }
         return sb.toString().trim();
+    }
+
+    /**
+     * Checks whether the task list contains a task that is equal to the specified task.
+     * <p>
+     * Equality is determined by the {@link Task#equals(Object)} method of the task objects.
+     *
+     * @param task the task to check for in the task list
+     * @return {@code true} if a matching task is found in the list, {@code false} otherwise
+     */
+    public boolean contains(Task task) {
+        for (Task t : this.tasks) {
+            if (t.equals(task)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 
