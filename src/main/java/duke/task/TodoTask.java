@@ -16,6 +16,25 @@ public class TodoTask extends Task {
     }
 
     /**
+     * Converts this {@link TodoTask} into a string suitable for storage.
+     * <p>
+     * The format is designed to be easily parsed when loading tasks from storage:
+     * <pre>
+     *     T | 0 or 1 | description
+     * </pre>
+     * where "T" indicates a TodoTask, "0" or "1" represents whether the task is done,
+     * followed by the task description.
+     *
+     * @return a formatted string representing this TodoTask for persistent storage
+     */
+    @Override
+    public String toStorageString() {
+        return "T | "
+                + (this.isDone() ? "1" : "0")
+                + " | " + this.getDescription();
+    }
+
+    /**
      * Returns a string representation of the todo task,
      * including its type indicator [T] and completion status.
      *

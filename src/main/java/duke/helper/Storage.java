@@ -1,21 +1,18 @@
 package duke.helper;
 
-import duke.list.TaskList;
-
-import duke.task.Task;
-import duke.task.DeadlineTask;
-import duke.task.EventTask;
-import duke.task.TodoTask;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import duke.list.TaskList;
+import duke.task.DeadlineTask;
+import duke.task.EventTask;
+import duke.task.Task;
+import duke.task.TodoTask;
 
 /**
  * Handles the saving and loading of tasks from the local storage file.
@@ -46,9 +43,11 @@ public class Storage {
         try {
             // Create directory and file if they do not exist yet
             File parentDir = file.getParentFile();
+
             if (!parentDir.exists()) {
                 parentDir.mkdirs();
             }
+
             if (!file.exists()) {
                 file.createNewFile();
                 return new TaskList(); // empty list if first run
@@ -62,7 +61,6 @@ public class Storage {
                     System.out.println("Warning: This line cannot be read: " + line);
                 }
             }
-
         } catch (IOException e) {
             System.out.println("Error reading file: " + e.getMessage());
         }
@@ -106,17 +104,17 @@ public class Storage {
         String description = parts[2];
 
         Task task = switch (type) {
-            case "T" -> new TodoTask(description);
-            case "D" -> {
-                String by = parts[3];
-                yield new DeadlineTask(description, by);
-            }
-            case "E" -> {
-                String start = parts[3];
-                String end = parts[4];
-                yield new EventTask(description, start, end);
-            }
-            default -> throw new IllegalArgumentException("Invalid task type: " + type);
+        case "T" -> new TodoTask(description);
+        case "D" -> {
+            String by = parts[3];
+            yield new DeadlineTask(description, by);
+        }
+        case "E" -> {
+            String start = parts[3];
+            String end = parts[4];
+            yield new EventTask(description, start, end);
+        }
+        default -> throw new IllegalArgumentException("Invalid task type: " + type);
         };
 
         if (isDone) {
@@ -126,26 +124,15 @@ public class Storage {
     }
 
     /**
-     * Converts a {@link Task} object into a string representation
-     * suitable for saving into the storage file.
+     * Converts a {@link Task} into its storage-friendly string representation.
+     * <p>
+     * This format is suitable for saving the task to a file or other persistent storage.
      *
-     * @param task The {@link Task} to format.
-     * @return A formatted string representation of the task.
-     * @throws IllegalArgumentException If the task type is unknown.
+     * @param task the {@link Task} to be formatted
+     * @return a string representing the task in a format suitable for storage
      */
     private String formatTask(Task task) {
-        String status = task.isDone() ? "1" : "0";
-        if (task instanceof TodoTask) {
-            return "T | " + status + " | " + task.getDescription();
-        } else if (task instanceof DeadlineTask) {
-            return "D | " + status + " | " + task.getDescription()
-                    + " | " + ((DeadlineTask) task).getBy();
-        } else if (task instanceof EventTask) {
-            return "E | " + status + " | " + task.getDescription()
-                    + " | " + ((EventTask) task).getStart()
-                    + " | " + ((EventTask) task).getEnd();
-        }
-        throw new IllegalArgumentException("Unknown task type");
+        return task.toStorageString();
     }
 }
 

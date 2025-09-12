@@ -1,9 +1,9 @@
 package duke.task;
 
-import duke.helper.Parser;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import duke.helper.Parser;
 
 /**
  * Represents a deadline task, which has a specific due date/time.
@@ -30,6 +30,26 @@ public class DeadlineTask extends Task {
      */
     public LocalDateTime getBy() {
         return by;
+    }
+
+    /**
+     * Converts this {@link DeadlineTask} into a string suitable for storage.
+     * <p>
+     * The format is designed to be easily parsed when loading tasks from storage:
+     * <pre>
+     *     D | 0 or 1 | description | by
+     * </pre>
+     * where "D" indicates a DeadlineTask, "0" or "1" represents whether the task is done,
+     * followed by the task description and the deadline date/time.
+     *
+     * @return a formatted string representing this DeadlineTask for persistent storage
+     */
+    @Override
+    public String toStorageString() {
+        return "D | "
+                + (this.isDone() ? "1" : "0")
+                + " | " + this.getDescription()
+                + " | " + this.getBy();
     }
 
     /**

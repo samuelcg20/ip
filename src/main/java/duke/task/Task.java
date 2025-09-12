@@ -4,7 +4,7 @@ package duke.task;
  * Represents a task with a description and completion status.
  * A Task can be marked as done or not done.
  */
-public class Task {
+public abstract class Task {
     private final String description;
     private boolean isDone;
 
@@ -52,15 +52,6 @@ public class Task {
     }
 
     /**
-     * Returns a string representation of the task,
-     * showing its completion status and description.
-     *
-     * @return formatted string of the task
-     */
-    @Override
-    public String toString() { return String.format("[%s] %s", this.getStatusIcon(), this.description); }
-
-    /**
      * Returns the status icon representing whether the task is done.
      * "X" indicates done, " " indicates not done.
      *
@@ -70,4 +61,5 @@ public class Task {
         return (isDone ? "X" : " "); // mark done task with X
     }
 
+    public abstract String toStorageString();
 }

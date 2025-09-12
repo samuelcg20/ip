@@ -1,8 +1,7 @@
 package duke.helper;
 
-import java.time.LocalDateTime;
 import java.time.LocalDate;
-
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -29,9 +28,9 @@ public class Parser {
      */
     private static final DateTimeFormatter[] DATE_FORMATS = new DateTimeFormatter[]{
             DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"), // e.g. 2019-12-02 1800
-            DateTimeFormatter.ofPattern("yyyy-MM-dd"),      // e.g. 2019-12-02
-            DateTimeFormatter.ofPattern("d/M/yyyy HHmm"),   // e.g. 2/12/2019 1800
-            DateTimeFormatter.ofPattern("d/M/yyyy")         // e.g. 2/12/2019
+            DateTimeFormatter.ofPattern("yyyy-MM-dd"), // e.g. 2019-12-02
+            DateTimeFormatter.ofPattern("d/M/yyyy HHmm"), // e.g. 2/12/2019 1800
+            DateTimeFormatter.ofPattern("d/M/yyyy") // e.g. 2/12/2019
     };
 
 
@@ -85,82 +84,66 @@ public class Parser {
      * @throws InvalidTaskFormatException if the input is missing required parts or has invalid structure
      */
     public static String[] extractPhrases(String input) throws InvalidTaskFormatException {
-        String firstWord = "";
-        String task = "";
-        String by = "";
-        String from = "";
-        String to = "";
-
-        // First word
-        String[] words = input.toLowerCase().split(" ", 2);
-        if (words.length > 0) {
-            firstWord = words[0];
-        } else {
+        String[] words = input.trim().toLowerCase().split(" ", 2);
+        if (words.length == 0) {
             throw new InvalidTaskFormatException("Unaccepted Input");
         }
 
-        switch (firstWord) {
+        String firstWord = words[0];
 
-            case "todo" -> {
-                if (words.length > 1) {
-                    task = words[1].trim();
-                    return new String[] {firstWord, task};
-                } else {
-                    throw new InvalidTaskFormatException("Todo Task cannot be empty");
-                }
+        return switch (firstWord) {
+        case "todo" -> parseTodo(words);
+        case "deadline" -> parseDeadline(input, words, firstWord);
+        case "event" -> parseEvent(input, words, firstWord);
+        default -> throw new InvalidTaskFormatException("Inputted task does not fall under todo, deadline or event");
+        };
+    }
 
-            }
-
-            case "deadline" -> {
-                // After first word up to /by
-                int byIndex = input.indexOf("/by ");
-                if (words.length > 1) {
-                    if (byIndex != -1) {
-                        task = input.substring(firstWord.length(), byIndex).trim();
-                    } else {
-                        throw new InvalidTaskFormatException("Deadline Task needs a /by statement");
-                    }
-                } else {
-                    throw new InvalidTaskFormatException("Deadline Task cannot be empty");
-                }
-
-                // Extract after /to
-                by = input.substring(byIndex + 4).trim();
-
-                return new String[] {firstWord, task, by};
-            }
-
-            case "event" -> {
-                // After first word up to /from
-                int fromIndex = input.indexOf("/from ");
-                if (words.length > 1) {
-                    if (fromIndex != -1) {
-                        task = input.substring(firstWord.length(), fromIndex).trim();
-                    } else {
-                        throw new InvalidTaskFormatException("Event Task needs a /from statement");
-                    }
-                } else {
-                    throw new InvalidTaskFormatException("Event Task cannot be empty");
-                }
-
-                // Extract between /from and /to
-                int toIndex = input.indexOf("/to ");
-                if (toIndex != -1 && fromIndex < toIndex) {
-                    from = input.substring(fromIndex + 6, toIndex).trim();
-                } else {
-                    throw new InvalidTaskFormatException("Event Task needs a /to statement that comes after /from");
-                }
-
-                // Extract after /to
-                to = input.substring(toIndex + 4).trim();
-
-                return new String[]{firstWord, task, from, to};
-            }
-
-            default -> {
-                throw new InvalidTaskFormatException("Inputted task does not fall under todo, deadline or event");
-            }
+    private static String[] parseTodo(String[] words) throws InvalidTaskFormatException {
+        if (words.length < 2 || words[1].isBlank()) {
+            throw new InvalidTaskFormatException("Todo Task cannot be empty");
         }
+        return new String[]{"todo", words[1].trim()};
+    }
+
+    private static String[] parseDeadline(String input, String[] words, String firstWord)
+            throws InvalidTaskFormatException {
+        if (words.length < 2) {
+            throw new InvalidTaskFormatException("Deadline Task cannot be empty");
+        }
+
+        int byIndex = input.indexOf("/by ");
+        if (byIndex == -1) {
+            throw new InvalidTaskFormatException("Deadline Task needs a /by statement");
+        }
+
+        String task = input.substring(firstWord.length(), byIndex).trim();
+        String by = input.substring(byIndex + 4).trim();
+
+        return new String[]{"deadline", task, by};
+    }
+
+    private static String[] parseEvent(String input, String[] words, String firstWord)
+            throws InvalidTaskFormatException {
+        if (words.length < 2) {
+            throw new InvalidTaskFormatException("Event Task cannot be empty");
+        }
+
+        int fromIndex = input.indexOf("/from ");
+        if (fromIndex == -1) {
+            throw new InvalidTaskFormatException("Event Task needs a /from statement");
+        }
+
+        int toIndex = input.indexOf("/to ");
+        if (toIndex == -1 || fromIndex > toIndex) {
+            throw new InvalidTaskFormatException("Event Task needs a /to statement that comes after /from");
+        }
+
+        String task = input.substring(firstWord.length(), fromIndex).trim();
+        String from = input.substring(fromIndex + 6, toIndex).trim();
+        String to = input.substring(toIndex + 4).trim();
+
+        return new String[]{"event", task, from, to};
     }
 }
 
