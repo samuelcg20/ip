@@ -44,7 +44,7 @@ public class Parser {
      * @return a parsed {@link LocalDateTime} representing the input
      * @throws IllegalArgumentException if the input cannot be parsed with any supported format
      */
-    public static LocalDateTime parseDateTime(String input) {
+    public static LocalDateTime parseDateTime(String input) throws InvalidTaskFormatException{
         for (DateTimeFormatter fmt : DATE_FORMATS) {
             // Try parsing into LocalDateTime
             try {
@@ -61,7 +61,10 @@ public class Parser {
                 // continue to next iteration
             }
         }
-        throw new IllegalArgumentException("Unrecognised date format: " + input);
+        throw new InvalidTaskFormatException("Unrecognised date format: "
+                + input
+                + "\nI only recognise "
+                + "yyyy-MM-dd HHmm OR yyyy-MM-dd OR d/M/yyyy HHmm OR d/M/yyyy");
     }
 
     /**

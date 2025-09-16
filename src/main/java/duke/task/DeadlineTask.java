@@ -3,6 +3,7 @@ package duke.task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import duke.exceptions.InvalidTaskFormatException;
 import duke.helper.Parser;
 
 /**
@@ -18,7 +19,7 @@ public class DeadlineTask extends Task {
      * @param description Description of the deadline task
      * @param by          Deadline date/time string to be parsed
      */
-    public DeadlineTask(String description, String by) {
+    public DeadlineTask(String description, String by) throws InvalidTaskFormatException {
         super(description);
         this.by = Parser.parseDateTime(by);
     }
