@@ -3,8 +3,8 @@ package duke.task;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import duke.exceptions.InvalidTaskFormatException;
 import duke.helper.Parser;
-import jdk.jfr.Event;
 
 /**
  * Represents an event task with a start and end date/time.
@@ -21,7 +21,7 @@ public class EventTask extends Task {
      * @param start       Start date/time string to be parsed
      * @param end         End date/time string to be parsed
      */
-    public EventTask(String description, String start, String end) {
+    public EventTask(String description, String start, String end) throws InvalidTaskFormatException {
         super(description);
         this.start = Parser.parseDateTime(start);
         this.end = Parser.parseDateTime(end);

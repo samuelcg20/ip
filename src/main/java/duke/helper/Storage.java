@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import duke.exceptions.InvalidTaskFormatException;
 import duke.list.TaskList;
 import duke.task.DeadlineTask;
 import duke.task.EventTask;
@@ -97,7 +98,7 @@ public class Storage {
      * @return A {@link Task} object corresponding to the line.
      * @throws IllegalArgumentException If the task type is invalid.
      */
-    private Task readLine(String line) {
+    private Task readLine(String line) throws InvalidTaskFormatException {
         String[] parts = line.split(" \\| ");
         String type = parts[0];
         boolean isDone = parts[1].equals("1");

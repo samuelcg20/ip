@@ -3,6 +3,7 @@ package duke.task;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.LocalDateTime;
 
@@ -46,7 +47,12 @@ class DeadlineTaskTest {
 
     @Test
     void constructor_initializesCorrectly() {
-        DeadlineTask task = new DeadlineTask("Submit assignment", "2025-09-15 2359");
+        DeadlineTask task = null;
+        try {
+            task = new DeadlineTask("Submit assignment", "2025-09-15 2359");
+        } catch (Exception e) {
+            fail();
+        }
 
         assertEquals("Submit assignment", task.getDescription());
         assertFalse(task.isDone());
@@ -55,14 +61,25 @@ class DeadlineTaskTest {
 
     @Test
     void toString_reflectsDeadlineCorrectly() {
-        DeadlineTask task = new DeadlineTask("Submit assignment", "2025-09-15 2359");
+        DeadlineTask task = null;
+        try {
+            task = new DeadlineTask("Submit assignment", "2025-09-15 2359");
+        } catch (Exception e) {
+            fail();
+        }
+
         String expected = "[D][ ] Submit assignment (by: Sep 15 2025, 11:59pm)";
         assertEquals(expected, task.toString());
     }
 
     @Test
     void toStorageString_formatsCorrectly() {
-        DeadlineTask task = new DeadlineTask("Submit assignment", "2025-09-15 2359");
+        DeadlineTask task = null;
+        try {
+            task = new DeadlineTask("Submit assignment", "2025-09-15 2359");
+        } catch (Exception e) {
+            fail();
+        }
         assertEquals("D | 0 | Submit assignment | 2025-09-15T23:59", task.toStorageString());
 
         task.mark();
@@ -74,7 +91,12 @@ class EventTaskTest {
 
     @Test
     void constructor_initializesCorrectly() {
-        EventTask task = new EventTask("Team meeting", "2025-09-20 1000", "2025-09-20 1200");
+        EventTask task = null;
+        try {
+            task = new EventTask("Team meeting", "2025-09-20 1000", "2025-09-20 1200");
+        } catch (Exception e) {
+            fail();
+        }
 
         assertEquals("Team meeting", task.getDescription());
         assertFalse(task.isDone());
@@ -84,14 +106,26 @@ class EventTaskTest {
 
     @Test
     void toString_reflectsEventCorrectly() {
-        EventTask task = new EventTask("Team meeting", "2025-09-20 1000", "2025-09-20 1200");
+        EventTask task = null;
+        try {
+            task = new EventTask("Team meeting", "2025-09-20 1000", "2025-09-20 1200");
+        } catch (Exception e) {
+            fail();
+        }
+
         String expected = "[E][ ] Team meeting (from: Sep 20 2025, 10:00am to: Sep 20 2025, 12:00pm)";
         assertEquals(expected, task.toString());
     }
 
     @Test
     void toStorageString_formatsCorrectly() {
-        EventTask task = new EventTask("Team meeting", "2025-09-20 1000", "2025-09-20 1200");
+        EventTask task = null;
+        try {
+            task = new EventTask("Team meeting", "2025-09-20 1000", "2025-09-20 1200");
+        } catch (Exception e) {
+            fail();
+        }
+
         assertEquals(
                 "E | 0 | Team meeting | 2025-09-20T10:00 | 2025-09-20T12:00",
                 task.toStorageString()

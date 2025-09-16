@@ -22,6 +22,7 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
+            stage.setTitle("S.AI Chatbot");
             fxmlLoader.<MainWindow>getController().setDuke(sai);  // inject the Duke instance
             stage.show();
         } catch (IOException e) {
