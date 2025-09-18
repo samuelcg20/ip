@@ -55,7 +55,7 @@ public class EventTask extends Task {
      * where "E" indicates an EventTask, "0" or "1" represents whether the task is done,
      * followed by the task description, start time, and end time.
      *
-     * @return a formatted string representing this EventTask for persistent storage
+     * @return a formatted string representing this EventTask for storage
      */
     @Override
     public String toStorageString() {
