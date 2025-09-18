@@ -1,6 +1,6 @@
 # S.AI User Guide
 
-> :information_source: S.AI (pronounced “sigh”) is a lightweight, offline task assistant with a friendly chat-style interface. Add todos, deadlines, and events; search, mark, unmark, and delete tasks; and have everything saved locally.
+> information_source: S.AI (pronounced “sigh”) is a lightweight, offline task assistant with a friendly chat-style interface. Add todos, deadlines, and events; search, mark, unmark, and delete tasks; and have everything saved locally.
 
 
 ## Introduction
@@ -196,5 +196,5 @@ Supported date/time input formats:
 - Core classes: `duke.Sai`, `duke.helper.Parser`, `duke.helper.Storage`, `duke.helper.Ui`, `duke.list.TaskList`, `duke.task.*`
 - Build system: Gradle with Shadow plugin; tests with JUnit 5
 
-## This app was created with the help of Co-Pilot for auto-complete
-## This readme was created with the help of Cursor
+### * This app was created with the help of Co-Pilot for auto-complete *
+### * This readme was created with the help of Cursor *
