@@ -25,7 +25,7 @@ public class TodoTask extends Task {
      * where "T" indicates a TodoTask, "0" or "1" represents whether the task is done,
      * followed by the task description.
      *
-     * @return a formatted string representing this TodoTask for persistent storage
+     * @return a formatted string representing this TodoTask for storage
      */
     @Override
     public String toStorageString() {
