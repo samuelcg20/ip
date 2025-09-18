@@ -19,7 +19,7 @@ public class TaskList {
     }
 
     /**
-     * Creates a TaskList initialized with an existing list of tasks.
+     * Creates a TaskList initialised with an existing list of tasks.
      *
      * @param tasks pre-existing tasks to load
      */
