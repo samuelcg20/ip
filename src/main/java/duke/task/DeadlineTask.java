@@ -43,7 +43,7 @@ public class DeadlineTask extends Task {
      * where "D" indicates a DeadlineTask, "0" or "1" represents whether the task is done,
      * followed by the task description and the deadline date/time.
      *
-     * @return a formatted string representing this DeadlineTask for persistent storage
+     * @return a formatted string representing this DeadlineTask for storage
      */
     @Override
     public String toStorageString() {
