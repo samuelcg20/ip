@@ -71,7 +71,7 @@ public class Sai {
      * is returned via the {@link Ui#showAddedTask(TaskList)} method.
      * @param input the raw user input string representing the task to add
      * @return a formatted message confirming that the task has been added
-     * @throws InvalidTaskTypeException if the task type is not recognized (not "todo", "deadline", or "event")
+     * @throws InvalidTaskTypeException if the task type is not recognised (not "todo", "deadline", or "event")
      * @throws InvalidTaskFormatException if the input format for the task details is invalid
      */
     public String addToList(String input) throws InvalidTaskTypeException, InvalidTaskFormatException {
