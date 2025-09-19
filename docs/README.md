@@ -1,6 +1,6 @@
 # S.AI User Guide
 
-> information_source: S.AI (pronounced “sigh”) is a lightweight, offline task assistant with a friendly chat-style interface. Add todos, deadlines, and events; search, mark, unmark, and delete tasks; and have everything saved locally.
+> information_source: S.AI is a lightweight, offline task assistant with a friendly chat-style interface. Add todos, deadlines, and events; search, mark, unmark, and delete tasks; and have everything saved locally.
 
 
 ## Introduction
@@ -160,20 +160,11 @@ Supported date/time input formats:
 - **Do I need the internet?**
   - No. Everything runs locally and stores to `data/sai.txt`.
 - **What Java version do I need?**
-  - JDK 17. Newer JVMs may work but are not guaranteed.
+  - JDK 17.
 - **Why does a date fail to parse?**
   - Use one of the supported formats listed above. If parsing fails, S.AI returns an error message indicating acceptable formats.
-- **Where is the UI? Can I run headless?**
-  - S.AI is a JavaFX desktop app. A non‑GUI mode isn’t provided in this build.
 - **How do duplicates work?**
   - S.AI prevents adding exact duplicates of existing tasks (same description and same date/time where applicable).
-
-
-## Known issues
-- On first run, `data/sai.txt` is created in the working directory; ensure the process has write permission.
-- Very large task lists may scroll quickly; use `find` to narrow down.
-- If JavaFX fails to start on Linux, verify that an X server/GUI session is available.
-
 
 ## Command summary
 
@@ -189,12 +180,3 @@ Supported date/time input formats:
 | Find | `find KEYWORD` | `find book` |
 | Exit | `bye` | `bye` |
 
-
-## For developers
-- Main entry point: `duke.Launcher` (configured via Gradle `application` plugin)
-- GUI bootstrap: `duke.Main` loads `/view/MainWindow.fxml`
-- Core classes: `duke.Sai`, `duke.helper.Parser`, `duke.helper.Storage`, `duke.helper.Ui`, `duke.list.TaskList`, `duke.task.*`
-- Build system: Gradle with Shadow plugin; tests with JUnit 5
-
-### * This app was created with the help of Co-Pilot for auto-complete *
-### * This readme was created with the help of Cursor *
