@@ -49,7 +49,7 @@ public class Parser {
      * @return a parsed {@link LocalDateTime} representing the input
      * @throws IllegalArgumentException if the input cannot be parsed with any supported format
      */
-    public static LocalDateTime parseDateTime(String input) throws InvalidTaskFormatException{
+    public static LocalDateTime parseDateTime(String input) throws InvalidTaskFormatException {
         for (DateTimeFormatter fmt : DATE_FORMATS) {
             // Try parsing into LocalDateTime
             try {
