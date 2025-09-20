@@ -1,5 +1,10 @@
 package duke.task;
 
+/*
+ * Note:
+ * Slight code refactoring and test case ideas were aided by OpenAI's ChatGPT.
+ */
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

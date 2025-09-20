@@ -1,13 +1,19 @@
 package duke.helper;
 
-import duke.exceptions.InvalidTaskFormatException;
+/*
+ * Note:
+ * Slight code refactoring and test case ideas were aided by OpenAI's ChatGPT.
+ */
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+
+import org.junit.jupiter.api.Test;
+
+import duke.exceptions.InvalidTaskFormatException;
 
 public class ParserTest {
 
