@@ -1,5 +1,10 @@
 package duke.helper;
 
+/*
+ * Note:
+ * Slight code refactoring and Javadoc elaboration were aided by OpenAI's ChatGPT.
+ */
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

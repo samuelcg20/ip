@@ -1,5 +1,10 @@
 package duke.helper;
 
+/*
+ * Note:
+ * Slight code refactoring and Javadoc elaboration were aided by OpenAI's ChatGPT.
+ */
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

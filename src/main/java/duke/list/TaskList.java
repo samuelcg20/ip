@@ -1,5 +1,10 @@
 package duke.list;
 
+/*
+ * Note:
+ * Slight code refactoring and Javadoc elaboration were aided by OpenAI's ChatGPT.
+ */
+
 import java.util.ArrayList;
 
 import duke.task.Task;
