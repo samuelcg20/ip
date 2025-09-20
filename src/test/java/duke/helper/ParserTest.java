@@ -20,36 +20,52 @@ public class ParserTest {
     @Test
     public void testParseDateTime_variousFormats() {
         // yyyy-MM-dd HHmm
-        LocalDateTime dt1 = Parser.parseDateTime("2019-12-02 1800");
-        assertEquals(2019, dt1.getYear());
-        assertEquals(12, dt1.getMonthValue());
-        assertEquals(2, dt1.getDayOfMonth());
-        assertEquals(18, dt1.getHour());
-        assertEquals(0, dt1.getMinute());
+        try {
+            LocalDateTime dt1 = Parser.parseDateTime("2019-12-02 1800");
+            assertEquals(2019, dt1.getYear());
+            assertEquals(12, dt1.getMonthValue());
+            assertEquals(2, dt1.getDayOfMonth());
+            assertEquals(18, dt1.getHour());
+            assertEquals(0, dt1.getMinute());
+        } catch (InvalidTaskFormatException e) {
+            fail();
+        }
 
         // yyyy-MM-dd (time defaults to 23:59)
-        LocalDateTime dt2 = Parser.parseDateTime("2019-12-02");
-        assertEquals(2019, dt2.getYear());
-        assertEquals(12, dt2.getMonthValue());
-        assertEquals(2, dt2.getDayOfMonth());
-        assertEquals(23, dt2.getHour());
-        assertEquals(59, dt2.getMinute());
+        try {
+            LocalDateTime dt2 = Parser.parseDateTime("2019-12-02");
+            assertEquals(2019, dt2.getYear());
+            assertEquals(12, dt2.getMonthValue());
+            assertEquals(2, dt2.getDayOfMonth());
+            assertEquals(23, dt2.getHour());
+            assertEquals(59, dt2.getMinute());
+        } catch (InvalidTaskFormatException e) {
+            fail();
+        }
 
         // d/M/yyyy HHmm
-        LocalDateTime dt3 = Parser.parseDateTime("2/12/2019 1800");
-        assertEquals(2019, dt3.getYear());
-        assertEquals(Month.DECEMBER, dt3.getMonth());
-        assertEquals(2, dt3.getDayOfMonth());
-        assertEquals(18, dt3.getHour());
-        assertEquals(0, dt3.getMinute());
+        try {
+            LocalDateTime dt3 = Parser.parseDateTime("2/12/2019 1800");
+            assertEquals(2019, dt3.getYear());
+            assertEquals(Month.DECEMBER, dt3.getMonth());
+            assertEquals(2, dt3.getDayOfMonth());
+            assertEquals(18, dt3.getHour());
+            assertEquals(0, dt3.getMinute());
+        } catch (InvalidTaskFormatException e) {
+            fail();
+        }
 
         // d/M/yyyy (time defaults to 23:59)
-        LocalDateTime dt4 = Parser.parseDateTime("2/12/2019");
-        assertEquals(2019, dt4.getYear());
-        assertEquals(Month.DECEMBER, dt4.getMonth());
-        assertEquals(2, dt4.getDayOfMonth());
-        assertEquals(23, dt4.getHour());
-        assertEquals(59, dt4.getMinute());
+        try {
+            LocalDateTime dt4 = Parser.parseDateTime("2/12/2019");
+            assertEquals(2019, dt4.getYear());
+            assertEquals(Month.DECEMBER, dt4.getMonth());
+            assertEquals(2, dt4.getDayOfMonth());
+            assertEquals(23, dt4.getHour());
+            assertEquals(59, dt4.getMinute());
+        } catch (InvalidTaskFormatException e) {
+            fail();
+        }
     }
 
     @Test
@@ -57,8 +73,12 @@ public class ParserTest {
         try {
             Parser.parseDateTime("invalid date string");
             fail();
-        } catch (IllegalArgumentException e) {
-            assertEquals("Unrecognised date format: invalid date string", e.getMessage());
+        } catch (InvalidTaskFormatException e) {
+            assertEquals(
+                    "Unrecognised date format: invalid date string\n"
+                            + "I only recognise yyyy-MM-dd HHmm OR yyyy-MM-dd OR d/M/yyyy HHmm OR d/M/yyyy",
+                    e.getMessage()
+            );
         }
     }
 
